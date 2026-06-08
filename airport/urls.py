@@ -17,7 +17,7 @@ router.register("crews", CrewViewSet)
 router.register("airplane_types", AirplaneTypeViewSet)
 router.register("airplanes", AirplaneViewSet)
 router.register("flights", FlightViewSet)
-router.register("orders", OrderViewSet)
+router.register("orders", OrderViewSet, basename="orders")
 router.register("tickets", TicketViewSet)
 
 
