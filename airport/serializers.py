@@ -18,6 +18,9 @@ class AirportSerializer(serializers.ModelSerializer):
 
 
 class RouteSerializer(serializers.ModelSerializer):
+    source = serializers.SlugRelatedField(slug_field="name", read_only=True)
+    destination = serializers.SlugRelatedField(slug_field="name", read_only=True)
+
     class Meta:
         model = Route
         fields = ["source", "destination", "distance"]
@@ -40,7 +43,7 @@ class AirplaneSerializer(serializers.ModelSerializer):
         model = Airplane
         fields = [
             "name",
-            "rows"
+            "rows",
             "seats_in_row",
             "airplane_type"
         ]
