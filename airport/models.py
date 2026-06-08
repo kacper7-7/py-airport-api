@@ -1,4 +1,5 @@
 from django.db import models
+from rest_framework.exceptions import ValidationError
 
 from airport_service import settings
 
@@ -79,3 +80,28 @@ class Ticket(models.Model):
         on_delete=models.CASCADE,
         related_name="tickets"
     )
+
+    @staticmethod
+    def validate_ticket(row, seat, airplane, error_to_show):
+        for ticket_attr_value, ticket_attr_name, airplane_attr_name in [
+            (row, "row", "rows"),
+            (seat, "seat", "seats")
+       ]:
+            count_attr = getattr(airplane, airplane_attr_name)
+            if not (1 <= ticket_attr_value <= count_attr):
+                raise error_to_show(
+                    f"{ticket_attr_name} must be in range:"
+                    f" 1-{count_attr}"
+                )
+
+    def clean(self):
+        Ticket.validate_ticket(
+            self.row,
+            self.seat,
+            self.flight.airplane,
+            ValidationError
+        )
+
+    class Meta:
+        unique_together = ("flight", "seat", "row")
+        ordering = ["row", "seat"]
