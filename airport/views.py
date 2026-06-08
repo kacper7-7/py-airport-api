@@ -11,14 +11,16 @@ from airport.models import (
     Order,
     Ticket
 )
-from airport.serializers import (AirportSerializer,
-                                 RouteSerializer,
-                                 CrewSerializer,
-                                 AirplaneSerializer,
-                                 AirplaneTypeSerializer,
-                                 FlightSerializer,
-                                 OrderSerializer,
-                                 TicketSerializer )
+from airport.serializers import (
+    AirportSerializer,
+    RouteSerializer,
+    CrewSerializer,
+    AirplaneSerializer,
+    AirplaneTypeSerializer,
+    FlightSerializer,
+    OrderSerializer,
+    TicketSerializer
+)
 
 
 class AirportViewSet(ModelViewSet):
@@ -28,7 +30,7 @@ class AirportViewSet(ModelViewSet):
 
 class RouteViewSet(ModelViewSet):
     serializer_class = RouteSerializer
-    queryset = Route.objects.all()
+    queryset = Route.objects.select_related("source", "destination")
 
 
 class CrewViewSet(ModelViewSet):
@@ -43,20 +45,20 @@ class AirplaneTypeViewSet(ModelViewSet):
 
 class AirplaneViewSet(ModelViewSet):
     serializer_class = AirplaneSerializer
-    queryset = Airplane.objects.all()
+    queryset = Airplane.objects.select_related("airplane_type")
 
 
 class FlightViewSet(ModelViewSet):
     serializer_class = FlightSerializer
-    queryset = Flight.objects.all()
+    queryset = Flight.objects.select_related("route", "airplane")
 
 
 class OrderViewSet(ModelViewSet):
     serializer_class = OrderSerializer
-    queryset = Order.objects.all()
+    queryset = Order.objects.select_related("user")
 
 
 class TicketViewSet(ModelViewSet):
     serializer_class = TicketSerializer
-    queryset = Ticket.objects.all()
+    queryset = Ticket.objects.select_related("flight", "order")
 
