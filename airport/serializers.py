@@ -39,6 +39,11 @@ class AirplaneTypeSerializer(serializers.ModelSerializer):
 
 
 class AirplaneSerializer(serializers.ModelSerializer):
+    airplane_type = serializers.SlugRelatedField(
+        slug_field="name",
+        read_only=True
+    )
+
     class Meta:
         model = Airplane
         fields = [
@@ -50,6 +55,12 @@ class AirplaneSerializer(serializers.ModelSerializer):
 
 
 class FlightSerializer(serializers.ModelSerializer):
+    route = RouteSerializer()
+    airplane = serializers.SlugRelatedField(
+        slug_field="name",
+        read_only=True
+    )
+
     class Meta:
         model = Flight
         fields = [
@@ -61,12 +72,16 @@ class FlightSerializer(serializers.ModelSerializer):
 
 
 class OrderSerializer(serializers.ModelSerializer):
+    user = serializers.StringRelatedField()
+
     class Meta:
         model = Order
         fields = ["created_at", "user"]
 
 
 class TicketSerializer(serializers.ModelSerializer):
+    flight = FlightSerializer()
+
     class Meta:
         model = Ticket
         fields = [
