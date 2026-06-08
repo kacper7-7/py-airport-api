@@ -1,6 +1,7 @@
+import uuid
+from pathlib import Path
 from django.db import models
 from rest_framework.exceptions import ValidationError
-
 from airport_service import settings
 
 
@@ -32,6 +33,11 @@ class AirplaneType(models.Model):
     name = models.CharField(max_length=255)
 
 
+def upload_image_path(instance, filename):
+    sufix = Path(filename).suffix
+    return f"{instance.name}-{uuid.uuid4()}{sufix}"
+
+
 class Airplane(models.Model):
     name = models.CharField(max_length=255)
     rows = models.IntegerField()
@@ -41,6 +47,7 @@ class Airplane(models.Model):
         on_delete=models.CASCADE,
         related_name="airplanes"
     )
+    image = models.ImageField(null=True, upload_to=upload_image_path)
 
 
 class Flight(models.Model):
