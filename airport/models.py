@@ -47,8 +47,14 @@ class Airplane(models.Model):
         on_delete=models.CASCADE,
         related_name="airplanes"
     )
-    image = models.ImageField(null=True, upload_to=upload_image_path)
+    image = models.ImageField(
+        null=True,
+        upload_to=upload_image_path
+    )
 
+    @property
+    def capacity(self):
+        return self.rows * self.seats_in_row
 
 class Flight(models.Model):
     route = models.ForeignKey(
