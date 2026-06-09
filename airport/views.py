@@ -20,6 +20,7 @@ from airport.models import (
     Order,
     Ticket
 )
+from airport.permission import IsAdminOrReadOnly
 from airport.serializers import (
     AirportSerializer,
     RouteSerializer,
@@ -35,12 +36,12 @@ from airport.serializers import (
 class AirportViewSet(ModelViewSet):
     serializer_class = AirportSerializer
     queryset = Airport.objects.all()
-
+    permission_classes = [IsAdminOrReadOnly]
 
 class RouteViewSet(ModelViewSet):
     serializer_class = RouteSerializer
     queryset = Route.objects.select_related("source", "destination")
-
+    permission_classes = [IsAdminOrReadOnly]
 
 class CrewViewSet(ModelViewSet):
     serializer_class = CrewSerializer
@@ -50,11 +51,13 @@ class CrewViewSet(ModelViewSet):
 class AirplaneTypeViewSet(ModelViewSet):
     serializer_class = AirplaneTypeSerializer
     queryset = AirplaneType.objects.all()
+    permission_classes = [IsAdminOrReadOnly]
 
 
 class AirplaneViewSet(ModelViewSet):
     serializer_class = AirplaneSerializer
     queryset = Airplane.objects.select_related("airplane_type")
+    permission_classes = [IsAdminOrReadOnly]
 
     @staticmethod
     def get_int_param(ids):
@@ -99,6 +102,7 @@ class AirplaneViewSet(ModelViewSet):
 class FlightViewSet(ModelViewSet):
     serializer_class = FlightSerializer
     queryset = Flight.objects.select_related("route", "airplane")
+    permission_classes = [IsAdminOrReadOnly]
 
     @staticmethod
     def get_int_param(ids):
