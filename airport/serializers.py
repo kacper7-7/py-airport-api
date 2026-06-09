@@ -216,6 +216,7 @@ class TicketCreateSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 "This seat is already taken for this flight."
             )
+        return attrs
 
 
 

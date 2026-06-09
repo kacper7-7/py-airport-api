@@ -1,5 +1,3 @@
-from django.contrib.sessions import serializers
-from django.shortcuts import render
 from rest_framework.generics import CreateAPIView
 
 from user.serializers import UserSerializer

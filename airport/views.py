@@ -46,6 +46,7 @@ class RouteViewSet(ModelViewSet):
 class CrewViewSet(ModelViewSet):
     serializer_class = CrewSerializer
     queryset = Crew.objects.all()
+    permission_classes = [IsAdminOrReadOnly]
 
 
 class AirplaneTypeViewSet(ModelViewSet):
@@ -91,7 +92,11 @@ class AirplaneViewSet(ModelViewSet):
     )
     def upload_image(self, request, pk):
         airplane = self.get_object()
-        serializer = self.get_serializer(airplane, data=request.data)
+        serializer = self.get_serializer(
+            airplane,
+            data=request.data,
+            partial=True
+        )
 
         serializer.is_valid(raise_exception=True)
         serializer.save()
