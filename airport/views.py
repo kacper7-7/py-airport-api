@@ -125,21 +125,21 @@ class FlightViewSet(ModelViewSet):
             ids_source = self.get_int_param(source)
             queryset = queryset.filter(
                 route__source__id__in=ids_source
-            )
+            ).distinct()
         if destination:
             ids_destination = self.get_int_param(destination)
             queryset = queryset.filter(
                 route__destination__id__in=ids_destination
-            )
+            ).distinct()
         if airplane:
             ids_airplane = self.get_int_param(airplane)
             queryset = queryset.filter(
                 airplane__id__in=ids_airplane
-            )
+            ).distinct()
         if date:
             queryset = queryset.filter(
                 departure_time__date=date
-            )
+            ).distinct()
         return queryset
 
     def get_serializer_class(self):
