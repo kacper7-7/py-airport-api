@@ -89,7 +89,7 @@ class AirplaneImageApiTestCase(APITestCase):
 
         response = self.client.post(
             url,
-            data={"iamge": image},
+            data={"image": image},
             format="multipart"
         )
 

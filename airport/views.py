@@ -1,15 +1,13 @@
-from logging import raiseExceptions
-
-from django.db.models.sql import query
-from django.shortcuts import render
-from django.views.generic import detail
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-import user
+
 from airport.models import (
     Airport,
     Route,
@@ -29,7 +27,8 @@ from airport.serializers import (
     AirplaneTypeSerializer,
     FlightSerializer,
     TicketSerializer, OrderCreateSerializer, OrderReadSerializer, FlightListSerializer,
-    FlightDetailSerializer, AirplaneImageSerializer, TicketDetailSerializer, TicketListSerializer
+    FlightDetailSerializer, AirplaneImageSerializer, TicketDetailSerializer, TicketListSerializer,
+    AirplaneImageUploadSerializer
 )
 
 
@@ -82,13 +81,21 @@ class AirplaneViewSet(ModelViewSet):
 
     def get_serializer_class(self):
         if self.action == "upload_image":
-            return AirplaneImageSerializer
+            return AirplaneImageUploadSerializer
+
         return AirplaneSerializer
+
+    @extend_schema(
+        request=AirplaneImageUploadSerializer,
+        responses=AirplaneImageSerializer,
+        description="Upload image to a specific airplane."
+    )
 
     @action(
         methods=["POST"],
         detail=True,
-        url_path="upload-image"
+        url_path="upload-image",
+        parser_classes=[MultiPartParser, FormParser]
     )
     def upload_image(self, request, pk):
         airplane = self.get_object()
@@ -100,9 +107,32 @@ class AirplaneViewSet(ModelViewSet):
 
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(serializer.data, status=status.HTTP_200_OK)
 
+        airplane.refresh_from_db()
 
+        response_serializer = AirplaneImageSerializer(
+            airplane,
+            context=self.get_serializer_context()
+        )
+
+        return Response(response_serializer.data, status=status.HTTP_200_OK)
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="name",
+                type=OpenApiTypes.STR,
+                description="Search by name."
+            ),
+            OpenApiParameter(
+                name="airplane_type",
+                type=OpenApiTypes.STR,
+                description="Search by airplane type."
+            )
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
 class FlightViewSet(ModelViewSet):
     serializer_class = FlightSerializer
@@ -125,22 +155,49 @@ class FlightViewSet(ModelViewSet):
             ids_source = self.get_int_param(source)
             queryset = queryset.filter(
                 route__source__id__in=ids_source
-            ).distinct()
+            )
         if destination:
             ids_destination = self.get_int_param(destination)
             queryset = queryset.filter(
                 route__destination__id__in=ids_destination
-            ).distinct()
+            )
         if airplane:
             ids_airplane = self.get_int_param(airplane)
             queryset = queryset.filter(
                 airplane__id__in=ids_airplane
-            ).distinct()
+            )
         if date:
             queryset = queryset.filter(
                 departure_time__date=date
-            ).distinct()
+            )
         return queryset
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="source",
+                type=OpenApiTypes.STR,
+                description="Filter by source airport ID. Example: 1 or 1,2."
+            ),
+            OpenApiParameter(
+                name="destination",
+                type=OpenApiTypes.STR,
+                description="Filter by destination airport ID. Example: 1 or 1,2."
+            ),
+            OpenApiParameter(
+                name="airplane",
+                type=OpenApiTypes.STR,
+                description="Filter by airplane airport ID. Example: 1 or 1,2."
+            ),
+            OpenApiParameter(
+                name="date",
+                type=OpenApiTypes.DATE,
+                description="Filter by departure date. Example: 2025-09-25."
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
     def get_serializer_class(self):
         if self.action == "list":
