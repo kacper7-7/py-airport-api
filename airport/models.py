@@ -9,6 +9,9 @@ class Airport(models.Model):
     name = models.CharField(max_length=255)
     closest_big_city = models.CharField(max_length=255)
 
+    def __str__(self):
+        return self.name
+
 
 class Route(models.Model):
     source = models.ForeignKey(
@@ -23,6 +26,8 @@ class Route(models.Model):
     )
     distance = models.IntegerField()
 
+    def __str__(self):
+        return f"{self.source} -> {self.destination}"
 
 class Crew(models.Model):
     first_name = models.CharField(max_length=255)
@@ -31,6 +36,9 @@ class Crew(models.Model):
 
 class AirplaneType(models.Model):
     name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
 
 
 def upload_image_path(instance, filename):
@@ -69,6 +77,9 @@ class Flight(models.Model):
     )
     departure_time = models.DateTimeField()
     arrival_time = models.DateTimeField()
+
+    def __str__(self):
+        return f"{self.route} at {self.departure_time}"
 
 
 class Order(models.Model):
