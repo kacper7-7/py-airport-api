@@ -18,7 +18,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
-from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
@@ -27,20 +27,19 @@ urlpatterns = [
     path('api/v1/', include("airport.urls", namespace="airport")),
     path('api/v1/user/', include("user.urls", namespace="user")),
     path("api-auth/", include("rest_framework.urls")),
-    path("api/schema/swagger-ui/", SpectacularAPIView.as_view(), name="schema"),
     path(
-        "api/schema/redoc/",
+        "api/schema/",
+        SpectacularAPIView.as_view(),
+        name="schema"
+    ),
+    path(
+        "api/schema/swagger-ui/",
         SpectacularSwaggerView.as_view(url_name="schema"),
         name="redoc"
     ),
     path(
-        "api/token/",
-        TokenObtainPairView.as_view(),
-        name="get-token"
+        "api/schema/redoc/",
+        SpectacularRedocView.as_view(url_name="schema"),
+        name="redoc",
     ),
-    path(
-        "api/token-refresh",
-        TokenRefreshView.as_view(),
-        name="token-refresh"
-    )
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
