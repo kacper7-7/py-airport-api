@@ -88,16 +88,7 @@ class FlightSerializer(serializers.ModelSerializer):
         ]
 
 
-class FlightAvailableSeatsMixin(serializers.Serializer):
-    available_tickets = serializers.SerializerMethodField()
-
-    def get_available_tickets(self, obj):
-        capacity = obj.airplane.capacity
-        sold_tickets = obj.tickets.count()
-        return capacity - sold_tickets
-
-
-class FlightListSerializer(FlightAvailableSeatsMixin, FlightSerializer):
+class FlightListSerializer(FlightSerializer):
     source = serializers.CharField(
         source="route.source.name",
         read_only=True
@@ -116,6 +107,8 @@ class FlightListSerializer(FlightAvailableSeatsMixin, FlightSerializer):
         read_only=True
     )
 
+    tickets_available = serializers.IntegerField(read_only=True)
+
     class Meta:
         model = Flight
         fields = [
@@ -126,7 +119,7 @@ class FlightListSerializer(FlightAvailableSeatsMixin, FlightSerializer):
             "airplane_image",
             "departure_time",
             "arrival_time",
-            "available_tickets"
+            "tickets_available"
         ]
 
 class TicketSeatSerializer(serializers.ModelSerializer):
@@ -136,7 +129,7 @@ class TicketSeatSerializer(serializers.ModelSerializer):
         fields = ["id", "row", "seat"]
 
 
-class FlightDetailSerializer(FlightAvailableSeatsMixin, FlightSerializer):
+class FlightDetailSerializer(FlightSerializer):
     route = RouteSerializer(read_only=True)
     airplane = AirplaneSerializer(read_only=True)
     taken_places = TicketSeatSerializer(
@@ -144,6 +137,7 @@ class FlightDetailSerializer(FlightAvailableSeatsMixin, FlightSerializer):
         many=True,
         read_only=True
     )
+    tickets_available = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Flight
@@ -154,7 +148,7 @@ class FlightDetailSerializer(FlightAvailableSeatsMixin, FlightSerializer):
             "departure_time",
             "arrival_time",
             "taken_places",
-            "available_tickets"
+            "tickets_available"
         ]
 
 

@@ -1,5 +1,6 @@
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema, OpenApiParameter
+from django.db.models import F, Count
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
@@ -136,7 +137,14 @@ class AirplaneViewSet(ModelViewSet):
 
 class FlightViewSet(ModelViewSet):
     serializer_class = FlightSerializer
-    queryset = Flight.objects.select_related("route", "airplane")
+    queryset = (Flight.objects.
+                select_related("route", "airplane")
+                .annotate(
+                    tickets_available=(
+                        F("airplane__rows") * F("airplane__seats_in_row")
+                        - Count("tickets")
+                    )
+    ))
     permission_classes = [IsAdminOrReadOnly]
 
     @staticmethod
