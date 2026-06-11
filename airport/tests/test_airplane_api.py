@@ -1,8 +1,4 @@
-from email.mime import multipart
-from urllib import response
-
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import AbstractUser
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
 from rest_framework import status
