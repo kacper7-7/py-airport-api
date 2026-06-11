@@ -18,7 +18,7 @@ router.register("airplane-types", AirplaneTypeViewSet)
 router.register("airplanes", AirplaneViewSet)
 router.register("flights", FlightViewSet)
 router.register("orders", OrderViewSet, basename="orders")
-router.register("tickets", TicketViewSet)
+router.register("tickets", TicketViewSet, basename="ticket")
 
 
 urlpatterns = [

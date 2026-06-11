@@ -247,7 +247,6 @@ class OrderViewSet(ModelViewSet):
 
 class TicketViewSet(ModelViewSet):
     serializer_class = TicketSerializer
-    queryset = Ticket.objects.select_related("flight", "order")
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -255,3 +254,9 @@ class TicketViewSet(ModelViewSet):
         if self.action == "retrieve":
             return TicketDetailSerializer
         return TicketSerializer
+
+    def get_queryset(self):
+        return (Ticket.objects.filter(
+            order__user=self.request.user)
+            .select_related("flight", "order")
+        )
