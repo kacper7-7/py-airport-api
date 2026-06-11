@@ -1,6 +1,6 @@
 FROM python:3.12-slim
 
-LABEL maintainer="kacper"
+LABEL maintainer="USER"
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1
