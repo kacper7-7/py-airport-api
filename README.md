@@ -6,6 +6,21 @@ The project is built with Django REST Framework and includes JWT authentication,
 ## Database Schema
 ![diagram.png](images/diagram.png)
 
+## API Showcase
+
+## 1. Flights Management
+* List:
+![flight_list.png](images/flight_list.png)
+* Detail:
+![flight_detail.png](images/flight_detail.png)
+
+## 2. Orders Management
+![order_list.png](images/order_list.png)
+
+## 3. Swagger UI
+![swagger-ui_flights.png](images/swagger-ui_flights.png)
+
+
 ## Features
 
 * User registration and JWT authentication
