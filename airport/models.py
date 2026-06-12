@@ -32,6 +32,10 @@ class Route(models.Model):
 class Crew(models.Model):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
+    flights = models.ManyToManyField(
+        "Flight",
+        related_name="crews"
+    )
 
 
 class AirplaneType(models.Model):

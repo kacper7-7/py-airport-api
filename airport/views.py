@@ -45,7 +45,7 @@ class RouteViewSet(ModelViewSet):
 
 class CrewViewSet(ModelViewSet):
     serializer_class = CrewSerializer
-    queryset = Crew.objects.all()
+    queryset = Crew.objects.prefetch_related("flights")
     permission_classes = [IsAdminOrReadOnly]
 
 
@@ -137,8 +137,9 @@ class AirplaneViewSet(ModelViewSet):
 
 class FlightViewSet(ModelViewSet):
     serializer_class = FlightSerializer
-    queryset = (Flight.objects.
-                select_related("route", "airplane")
+    queryset = (Flight.objects
+                .select_related("route", "airplane")
+                .prefetch_related("crews", "tickets")
                 .annotate(
                     tickets_available=(
                         F("airplane__rows") * F("airplane__seats_in_row")

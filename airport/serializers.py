@@ -32,7 +32,12 @@ class RouteSerializer(serializers.ModelSerializer):
 class CrewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Crew
-        fields = ["id", "first_name", "last_name"]
+        fields = [
+            "id",
+            "first_name",
+            "last_name",
+            "flights"
+        ]
 
 
 class AirplaneTypeSerializer(serializers.ModelSerializer):
@@ -128,6 +133,7 @@ class TicketSeatSerializer(serializers.ModelSerializer):
 
 
 class FlightDetailSerializer(FlightSerializer):
+    crews = CrewSerializer(many=True, read_only=True)
     route = RouteSerializer(read_only=True)
     airplane = AirplaneSerializer(read_only=True)
     taken_places = TicketSeatSerializer(
@@ -146,7 +152,8 @@ class FlightDetailSerializer(FlightSerializer):
             "departure_time",
             "arrival_time",
             "taken_places",
-            "tickets_available"
+            "tickets_available",
+            "crews"
         ]
 
 

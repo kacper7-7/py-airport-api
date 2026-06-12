@@ -3,6 +3,75 @@
 Airport API is a RESTful backend application for managing airports, routes, airplanes, flights, tickets, and orders.
 The project is built with Django REST Framework and includes JWT authentication, Swagger documentation, Docker support, PostgreSQL database integration, filtering, pagination, and airplane image upload.
 
+```
+mermaid
+erDiagram
+    USER ||--o{ ORDER : "places"
+    AIRPORT ||--o{ ROUTE : "source"
+    AIRPORT ||--o{ ROUTE : "destination"
+    ROUTE ||--o{ FLIGHT : "assigned to"
+    AIRPLANE_TYPE ||--o{ AIRPLANE : "categorizes"
+    AIRPLANE ||--o{ FLIGHT : "flies"
+    FLIGHT }|--|{ CREW : "is staffed by (M2M)"
+    ORDER ||--|{ TICKET : "contains"
+    FLIGHT ||--o{ TICKET : "booked for"
+
+    USER {
+        int id PK
+        string email
+        string password
+        string first_name
+        string last_name
+    }
+    AIRPORT {
+        int id PK
+        string name
+        string closest_big_city
+    }
+    ROUTE {
+        int id PK
+        int source_id FK
+        int destination_id FK
+        int distance
+    }
+    AIRPLANE_TYPE {
+        int id PK
+        string name
+    }
+    AIRPLANE {
+        int id PK
+        string name
+        int rows
+        int seats_in_row
+        int airplane_type_id FK
+        string image
+    }
+    CREW {
+        int id PK
+        string first_name
+        string last_name
+    }
+    FLIGHT {
+        int id PK
+        int route_id FK
+        int airplane_id FK
+        datetime departure_time
+        datetime arrival_time
+    }
+    ORDER {
+        int id PK
+        datetime created_at
+        int user_id FK
+    }
+    TICKET {
+        int id PK
+        int row
+        int seat
+        int flight_id FK
+        int order_id FK
+    }
+```
+
 ## Features
 
 * User registration and JWT authentication
@@ -35,8 +104,14 @@ The project is built with Django REST Framework and includes JWT authentication,
 Clone the repository:
 
 ```bash
-git clone https://github.com/your-username/py-airport-api.git
+git clone https://github.com/7/py-airport-api.git
 cd py-airport-api
+```
+
+Create environment file:
+
+```bash
+cp .env.sample .env
 ```
 
 Create and activate a virtual environment:
@@ -56,19 +131,6 @@ Install dependencies:
 
 ```bash
 pip install -r requirements.txt
-```
-
-Create a `.env` file in the project root:
-
-```env
-POSTGRES_DB=airport
-POSTGRES_USER=airport_user
-POSTGRES_PASSWORD=airport_password
-POSTGRES_HOST=db
-POSTGRES_PORT=5432
-
-DJANGO_SECRET_KEY=change-me
-DJANGO_DEBUG=True
 ```
 
 ## Run with Docker
@@ -334,7 +396,3 @@ py-airport-api/
 ├── manage.py
 └── README.md
 ```
-
-## License
-
-This project is licensed under the MIT License.
