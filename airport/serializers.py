@@ -22,7 +22,10 @@ class AirportSerializer(serializers.ModelSerializer):
 
 class RouteSerializer(serializers.ModelSerializer):
     source = serializers.SlugRelatedField(slug_field="name", read_only=True)
-    destination = serializers.SlugRelatedField(slug_field="name", read_only=True)
+    destination = serializers.SlugRelatedField(
+        slug_field="name",
+        read_only=True
+    )
 
     class Meta:
         model = Route
@@ -125,6 +128,7 @@ class FlightListSerializer(FlightSerializer):
             "tickets_available"
         ]
 
+
 class TicketSeatSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -216,17 +220,14 @@ class TicketCreateSerializer(serializers.ModelSerializer):
         )
 
         if Ticket.objects.filter(
-            row = attrs["row"],
-            seat = attrs["seat"],
-            flight = attrs["flight"]
+            row=attrs["row"],
+            seat=attrs["seat"],
+            flight=attrs["flight"]
         ).exists():
             raise serializers.ValidationError(
                 "This seat is already taken for this flight."
             )
         return attrs
-
-
-
 
 
 class OrderReadSerializer(serializers.ModelSerializer):
@@ -278,7 +279,6 @@ class OrderCreateSerializer(serializers.ModelSerializer):
             seen_tickets.add(key)
 
         return attrs
-
 
     def create(self, validated_data):
         with transaction.atomic():

@@ -27,8 +27,14 @@ from airport.serializers import (
     AirplaneSerializer,
     AirplaneTypeSerializer,
     FlightSerializer,
-    TicketSerializer, OrderCreateSerializer, OrderReadSerializer, FlightListSerializer,
-    FlightDetailSerializer, AirplaneImageSerializer, TicketDetailSerializer, TicketListSerializer,
+    TicketSerializer,
+    OrderCreateSerializer,
+    OrderReadSerializer,
+    FlightListSerializer,
+    FlightDetailSerializer,
+    AirplaneImageSerializer,
+    TicketDetailSerializer,
+    TicketListSerializer,
     AirplaneImageUploadSerializer
 )
 
@@ -38,10 +44,12 @@ class AirportViewSet(ModelViewSet):
     queryset = Airport.objects.all()
     permission_classes = [IsAdminOrReadOnly]
 
+
 class RouteViewSet(ModelViewSet):
     serializer_class = RouteSerializer
     queryset = Route.objects.select_related("source", "destination")
     permission_classes = [IsAdminOrReadOnly]
+
 
 class CrewViewSet(ModelViewSet):
     serializer_class = CrewSerializer
@@ -67,7 +75,6 @@ class AirplaneViewSet(ModelViewSet):
     def get_queryset(self):
         name = self.request.query_params.get("name")
         airplane_type = self.request.query_params.get("airplane_type")
-        
         queryset = self.queryset
 
         if name:
@@ -91,7 +98,6 @@ class AirplaneViewSet(ModelViewSet):
         responses=AirplaneImageSerializer,
         description="Upload image to a specific airplane."
     )
-
     @action(
         methods=["POST"],
         detail=True,
@@ -135,17 +141,20 @@ class AirplaneViewSet(ModelViewSet):
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
+
 class FlightViewSet(ModelViewSet):
     serializer_class = FlightSerializer
-    queryset = (Flight.objects
-                .select_related("route", "airplane")
-                .prefetch_related("crews", "tickets")
-                .annotate(
-                    tickets_available=(
-                        F("airplane__rows") * F("airplane__seats_in_row")
-                        - Count("tickets")
-                    )
-    ))
+    queryset = (
+        Flight.objects
+        .select_related("route", "airplane")
+        .prefetch_related("crews", "tickets")
+        .annotate(
+            tickets_available=(
+                F("airplane__rows") * F("airplane__seats_in_row")
+                - Count("tickets")
+            )
+        )
+    )
     permission_classes = [IsAdminOrReadOnly]
 
     @staticmethod
@@ -191,7 +200,8 @@ class FlightViewSet(ModelViewSet):
             OpenApiParameter(
                 name="destination",
                 type=OpenApiTypes.STR,
-                description="Filter by destination airport ID. Example: 1 or 1,2."
+                description="Filter by destination airport ID."
+                            " Example: 1 or 1,2."
             ),
             OpenApiParameter(
                 name="airplane",

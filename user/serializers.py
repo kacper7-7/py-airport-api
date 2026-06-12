@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from django.utils.translation import gettext as _
 
+
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         label=_("Password"),
@@ -9,6 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
         min_length=5,
         write_only=True
     )
+
     class Meta:
         model = get_user_model()
         fields = ["id", "email", "password", "is_staff"]

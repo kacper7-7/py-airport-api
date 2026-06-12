@@ -31,7 +31,7 @@ class AirplaneImageApiTestCase(APITestCase):
     def test_upload_image_to_airplane(self):
         url = reverse(
             "airport:airplane-upload-image",
-            kwargs={"pk":self.airplane.pk}
+            kwargs={"pk": self.airplane.pk}
         )
 
         image = SimpleUploadedFile(
@@ -49,7 +49,7 @@ class AirplaneImageApiTestCase(APITestCase):
 
         response_1 = self.client.post(
             url,
-            data={"image":image},
+            data={"image": image},
             format="multipart"
         )
 

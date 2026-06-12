@@ -29,6 +29,7 @@ class Route(models.Model):
     def __str__(self):
         return f"{self.source} -> {self.destination}"
 
+
 class Crew(models.Model):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
@@ -67,6 +68,7 @@ class Airplane(models.Model):
     @property
     def capacity(self):
         return self.rows * self.seats_in_row
+
 
 class Flight(models.Model):
     route = models.ForeignKey(
@@ -114,7 +116,7 @@ class Ticket(models.Model):
         for ticket_attr_value, ticket_attr_name, airplane_attr_name in [
             (row, "row", "rows"),
             (seat, "seat", "seats_in_row")
-       ]:
+        ]:
             count_attr = getattr(airplane, airplane_attr_name)
             if not (1 <= ticket_attr_value <= count_attr):
                 raise error_to_show(

@@ -4,7 +4,13 @@ from django.urls import reverse
 from django.utils import timezone
 from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
-from airport.models import Order, Ticket, Airport, Route, Airplane, AirplaneType, Flight
+from airport.models import (Order,
+                            Ticket,
+                            Airport,
+                            Route,
+                            Airplane,
+                            AirplaneType,
+                            Flight)
 
 
 URL_ORDER = reverse("airport:orders-list")
@@ -54,21 +60,20 @@ class CreateOrderTestCase(APITestCase):
             arrival_time=timezone.now() + timedelta(hours=2)
         )
 
-
     def test_create_order(self):
         response = self.client.post(
             URL_ORDER, data={
-            "tickets": [
-                {
-                    "row": 2,
-                    "seat": 2,
-                    "flight": self.flight.id
 
+                "tickets": [
+                    {
+                        "row": 2,
+                        "seat": 2,
+                        "flight": self.flight.id
                     }
                 ]
             },
             format="json"
-    )
+        )
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Ticket.objects.count(), 1)
