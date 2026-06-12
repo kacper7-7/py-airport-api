@@ -3,74 +3,8 @@
 Airport API is a RESTful backend application for managing airports, routes, airplanes, flights, tickets, and orders.
 The project is built with Django REST Framework and includes JWT authentication, Swagger documentation, Docker support, PostgreSQL database integration, filtering, pagination, and airplane image upload.
 
-```
-mermaid
-erDiagram
-    USER ||--o{ ORDER : "places"
-    AIRPORT ||--o{ ROUTE : "source"
-    AIRPORT ||--o{ ROUTE : "destination"
-    ROUTE ||--o{ FLIGHT : "assigned to"
-    AIRPLANE_TYPE ||--o{ AIRPLANE : "categorizes"
-    AIRPLANE ||--o{ FLIGHT : "flies"
-    FLIGHT }|--|{ CREW : "is staffed by (M2M)"
-    ORDER ||--|{ TICKET : "contains"
-    FLIGHT ||--o{ TICKET : "booked for"
-
-    USER {
-        int id PK
-        string email
-        string password
-        string first_name
-        string last_name
-    }
-    AIRPORT {
-        int id PK
-        string name
-        string closest_big_city
-    }
-    ROUTE {
-        int id PK
-        int source_id FK
-        int destination_id FK
-        int distance
-    }
-    AIRPLANE_TYPE {
-        int id PK
-        string name
-    }
-    AIRPLANE {
-        int id PK
-        string name
-        int rows
-        int seats_in_row
-        int airplane_type_id FK
-        string image
-    }
-    CREW {
-        int id PK
-        string first_name
-        string last_name
-    }
-    FLIGHT {
-        int id PK
-        int route_id FK
-        int airplane_id FK
-        datetime departure_time
-        datetime arrival_time
-    }
-    ORDER {
-        int id PK
-        datetime created_at
-        int user_id FK
-    }
-    TICKET {
-        int id PK
-        int row
-        int seat
-        int flight_id FK
-        int order_id FK
-    }
-```
+## Database Schema
+![diagram.png](images/diagram.png)
 
 ## Features
 
