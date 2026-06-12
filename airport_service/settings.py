@@ -26,10 +26,13 @@ MEDIA_URL = "/media/"
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-n!^k%+)zldieyu@%jl@1(02k2lw$20&de%bk!h&yml*gj-ymut'
+SECRET_KEY = os.environ.get(
+    "DJANGO_SECRET_KEY",
+"django-insecure-dev-only-key"
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DJANGO_DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = []
 
@@ -135,7 +138,7 @@ AUTH_USER_MODEL = 'user.User'
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
-    "rest_framework_simplejwt.authentication.JWTAuthentication",
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 5,
