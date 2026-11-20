@@ -53,7 +53,7 @@ The project is built with Django REST Framework and includes JWT authentication,
 Clone the repository:
 
 ```bash
-git clone https://github.com/7/py-airport-api.git
+git clone https://github.com/kacper7-7/py-airport-api.git
 cd py-airport-api
 ```
 
@@ -69,6 +69,9 @@ Create and activate a virtual environment:
 python -m venv venv
 source venv/bin/activate
 ```
+Open the `.env` file and replace `DJANGO_SECRET_KEY`
+with a unique, randomly generated secret key.
+Never commit the `.env` file to Git.
 
 On Windows:
 
