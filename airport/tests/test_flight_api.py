@@ -121,7 +121,7 @@ class FlightApiTestCase(APITestCase):
             self.flight.route.source.name
         )
         self.assertEqual(
-            response.data["results"][0]["available_tickets"],
+            response.data["results"][0]["tickets_available"],
             178
         )
 
@@ -138,7 +138,7 @@ class FlightApiTestCase(APITestCase):
             status.HTTP_200_OK
         )
         self.assertEqual(
-            response.data["available_tickets"],
+            response.data["tickets_available"],
             178
         )
         self.assertEqual(
